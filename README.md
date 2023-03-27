@@ -1,225 +1,226 @@
 # Luceoom
-3д-игра написанная на python3 с помощью pygame(v2.0.0) 
+**3D-game written in python(v3.8.6) using pygame(v2.0.0).**
+
+Inspired by the cult game DOOM, it was decided to write my own game like DOOM, only in python using the pygame library.
+
+## Description
+The game has 3 levels, your task is to go through each and kill the main boss at the end. You initially have 100 health units and 2 weapons to choose from, moving through the levels you can find first-aid kits that restore your health. Remember, the next level will not open until you kill all the opponents on the current one.
+
+## How to play?
+Run the main.py or exe file. In the main menu, select the difficulty level and the mode for displaying the corpses of mobs.
   
-  ## main.py
- Данный файл отвечает за запуск программы. Инициализируются основные функции, запускается отрисовка и бесконечный цикл, который и является программой.
+## Mobs:
+* Obyuma is a big black monkey. HP: 3, melee.  
+* Soldier - a soldier with a cannon, instantly shoots. HP: 1, ranged.  
+* Pinky - pink devil HP: 5, melee.  
+* Stas - A very dangerous enemy. HP: 10, melee.  
+* Sosademon - Boss. Very fast and kills with one hit. HP: 30, melee.
+   
+## Gun:
+ * Shotgun - slow but powerful weapon, deals 1.5 damage.  
+ * Automatic - fast weapon, deals 0.35 damage. 
   
-  ## sprites.py 
-  Данный файл отвечает за конфигурация каждого моба и параметра в игре
-  ```
+## Management:  
+* W, A, S, D - character movement  
+* 1, 2, mouse wheel - change weapon  
+* LMB - shooting
+  
++ Also in the game there are first-aid kits, which restore 35 HP  
+  
++ Igrom can open the door to the next room, only if all the mobs in this room are killed
+
+## Code Description  
+Below is a detailed description of each file.  
+### main.py  
+This file is responsible for starting the program. The main functions are initialized, drawing starts and an endless loop, which is the program.
+  
+
+### sprites.py 
+This file is responsible for the configuration of each mob and parameter in the game
+```python
 Class Sprites:
+   def init # here we set lists with objects and their coordinates (doors and mobs for 3 levels)
 
-    init - здесь мы задаем списки с объектами и их координатами(двери и мобы для 3х уровней)
+   def sprite_shot # returns the closest object to the player being fired upon
 
-    sprite_shot - возвращает ближайший объект к игроку, по которому идет стрельба
+   def b_doors # returns a dictionary of all closed doors
 
-    b_doors - возвращает словарь всех закрытых дверей
-
-    delete_objects - очищает карту от трупов мобов и открытых дверей
+   def delete_objects # clears the map of mob corpses and open doors
 
 Class AllSprites:
+    def init # here all parameters for each sprite are initialized in order to further work on it
+    def is_on_fire # check if the sprite is in the line of fire
 
-    init - здесь инициализируются все параметры для каждого спрайта чтобы в дальнейшем работать над ним
-    is_on_fire - проверяем, находиться ли спрайт на линии огня
+    def pos # returns the current position on the map
 
-    pos - возвращает текущую позицию на карте
+    def object_locate # determining the distance to a sprite
 
-    object_locate - определение расстояния до спрайта
+    def s_animation # display attack animation if the mob sees us and we are at a distance at which he sees us (self.animation_dist)
 
-    s_animation - отображения анимации атаки если моб нас видит и мы находимся на расстоянии при котором он нас видит(self.animation_dist)
+    def show_sprite # display sprites (so the player can see them)
 
-    show_sprite - отображаем спрайты(чтобы игрок их видел)
+    def dead_animation # display animation of the death of mobs and objects
 
-    dead_animation - отображение анимации смерти мобов и объектов
+    def s_action # displaying a mob from different angles (if you bypass it at a large distance, it looks different)
 
-    s_action - отображение моба с разных углов(если на большом растоянии его обходить он выглядит по-разному)
+    def d_open # открывает указаннуб дверь
+```
+Next come the classes of each sprite (they store the parameters for each sprite,
+which will then be initialized when they spawn on the map)
+```
+Parameters:
+    way - list with base sprite images from different angles
 
-    d_open - открывает указаннуб дверь
+    viewing_angles - a parameter that determines how the sprite looks from different angles (False - the same, True - different)
 
-Далее идут классы каждого спрайта(в них хранятся параметры для каждого спрайта, которые потом будут инициализированы при спавне их на карте)
+    shift - sprite height relative to the floor
 
-Параметры:
+    scale - sprite scaling (very handy for editing sprite size directly in code)
 
-    way - список с базовыми изображениями спрайта с разных углов
+    side - sprite size
 
-    viewing_angles - параметр, определяющий как выглядит спрайт с разных углов (False - одинаково, True - по-разному)
+    animation - sprite size
 
-    shift - высота спрайта относительно пола
+    animation_dist - the distance at which the sprite sees the player
 
-    scale - масштабирование спрайта(очень удобно для редактирования размера спрайта прямо в коде)
+    animation_speed - the speed of changing each animation picture
 
-    side - размер спрайта
+    dead - the flag (first True) will change to False when the sprite is killed
 
-    animation - анимация атаки
+    dead_shift - position of the body relative to the floor
 
-    animation_dist - расстояние, при котором спрайт видит игрока
+    dead_anim - список анимаций смерти
 
-    animation_speed - скорость смены каждой картинки анимации
+    tp - object type (barrel, fire, mob, first aid kit)
 
-    dead - флаг(сначала True) изменится на False, когда спрайт будет убит
+    blocked - is it possible to walk through the sprite (True - not possible)
 
-    dead_shift - положение трупа относительно пола
-
-    dead_anim - список анимаций смерти
-
-    tp - тип объекта(бочка,огонь, моб,аптечка)
-
-    blocked - можно ли ходить сквозь спрайт(True - нельзя)
-
-    npc_hp - количество хп моба
-  ```
-  
-  ## map.py 
-  В данном файле задаются параметры карты и миникарты, задается ширина и длина мира. Также здесь добавляются нужные текстуры стен.
-  ```
-  Класс Camera:
-Функция __init__:
-	Инициализирует класс, который реализует отслеживание игрока на миникарте.
-
-Функция update:
-	Обновляет данные о миникарте.
-
-Функция apply:
-	Обновляет миникарту.
+    npc_hp - mob's HP
 ```
   
-  ## malen.py 
-  (с немецкого - рисование) Данный файл отрисовывает все, что находится в поле зрения игрока (текстуры стен и т.д.)\
+### map.py 
+This file sets the parameters of the map and minimap, sets the width and length of the world. Also, the desired wall textures are added here.
+```python
+Class Camera:  
+	def __init__:  
+		Initializes a class that implements player tracking on the minimap.  
+  
+	def update:  
+		Updates minimap data.  
+  
+	def apply:  
+		Updates the minimap.
+```
+  
+### malen.py 
+(from German - drawing) This file draws everything that is in the player's field of view (wall textures, etc.)
   ```python
   class Malen:
-Функция __init__:
-	Здесь задаются параметры объекта класса Malen, а также параметры оружия обоих видов.
+	def __init__:
+		Here the parameters of the object of the Malen class are set, as well as the parameters of weapons of both types.
 
-Функция bg:
-	Функция отрисовывает небо.
+	def bg:
+		The function draws the sky.
 
-Функция world:
-	Расставляет спрайты по карте.
+	def world:
+		Arranges sprites on the map.
 
-Функция fps:
-	Отрисовывает fps на экране.
+	def fps:
+		Draws fps on the screen.
 
-Функция hp:
-	Отрисовывает полоску здоровья на экране.
+	def hp:
+		Draws a health bar on the screen.
 
-Функция terminate:
-	Позволяет выйти из игры.
+	def terminate:
+		Allows you to exit the game.
 
-Функция mini_map:
-	Отрисовывает миникарту на экране.
+	def mini_map:
+		Draws a minimap on the screen.
 
-Функция choice_weapon:
-	Реализует выбор оружия.
+	def choice_weapon:
+		Implements weapon selection.
 
-Функция bullet_sfx:
-	Отрисовывает взрыв от пули на стене или нпс.
+	def bullet_sfx:
+		Draws an explosion from a bullet on a wall or NPC.
 	
-Функция win:
-	Отображает экран победы.
+	def win:
+		Displays the victory screen.
 	
-Функция menu:
-	Отображает меню запуска.
+	def menu:
+		Displays the launch menu
 
-Функция dead_menu:
-	Отображает экран смерти
-  ```
+	def dead_menu:
+		Displays the death screen
+```
   
-  ## parameters.py
- В данном файле задаются основные константы, необходимые для продуктивной работы программы. Например: позиция игрока, угол обзора, ширина и высота текстур.
+### parameters.py
+ This file specifies the basic constants necessary for the productive operation of the program. For example: player position, view angle, width and height of textures.
   
-  ## gamer.py 
+### gamer.py 
 В этом файле находится класс игрока, в котором находятся следующие функции
 ```python
 class Gamer:
 	def __init__(self, sprites):
-		здесь мы задаем все нужные атрибуты и определяем флаги
+		# here we set all the necessary attributes and define flags
 		
 	def pos(self):
-		возвращаем текущие координаты игрока, но это удобнее и быстрее при помощи встроенного декоратора, чтобы использовать функцию как атрибут класса
+		# we return the current coordinates of the player, but it's more convenient and faster using the built-in decorator to use the function as a class attribute
 	def collision_list(self):
-		возвращаем список всех объектов, которые не прозрачны для игрока, через которые нельзя ходить. Для удобства используем декоратор
+		# return a list of all objects that are not transparent to the player and that cannot be walked through. For convenience, we use a decorator
 
 	def detect_collision(self):
-		в этой функции определяем, пересекается ли прямоугольника игрока (из инита) с прямоугольником тех или иных спрайтов (определен в классе каждого спрайта)
+		# in this function, we determine whether the player's rectangle (from init) intersects with the rectangle of certain sprites (defined in the class of each sprite)
 
 	def keys_check(self):
-		в этой функций мы стандартным методом проекций на разные оси задаем
-		горизонтальные и вертикальные составляющие скоростей, привязываем их к
-		привычному в шутерах управлению, определяем моменты выстрела и
-		переключение между оружием
+		# of this function, we define by the standard method of projections onto different axes horizontal and vertical components of 
+        # velocities, we tie them to familiar in shooters control, determine the moments of the shot and switching between weapons
 
 	def is_dead(self):
-		проверка на то, что персонаж жив, иначе меняем флаг из инита
+		# check that the character is alive, otherwise change the flag from init
 
 	def return_flag(self):
-		возвращает текущее оружие игрока
+		# returns the player's current weapon
 
 	def mouse_verific(self):
-		движение мышки у нас только по оси икс, поэтому мы смотрим масштабность
-		движения, задаем мыши постоянное положение в центре экрана и изменяем
-		угол игрока
+		# we have mouse movement only along the x-axis, so we look at the scale  
+		# movement, set the mouse to a constant position in the center of the screen and change player angle
 
 	def movement(self):
-		сборная функция для вышеописанных, так же мы корректируем угол, помещая
-		его в стандартные для тригонометрии 10 класса рамки
+		# prefab for the above, so we adjust the    angle by putting  
+		# it into the standard trigonometry class 10 framework
 ```
   
-  ## interaction.py 
+### interaction.py 
 ```python
 class Interaction:
 	def init:
-		здесь инициализируются объекты классов Gamer, Sprites и Malen, а также
-		флаг уровня сложности
+		# objects of the Gamer, Sprites and Malen classes are initialized here, as well as  
+difficulty level flag
 
 	def terminate: 
-		завершение игры
+		# game over
 
 	def interaction_objects:
-		определяет реакцию объектов на стрельбу игрока, в зависимости от их типа
+		# determines the reaction of objects to the player's shooting, depending on their type
 
 	def npc_action:
-		атака объектов на игрока
+		# object attack on the player
 
 	def set_difficulty:
-		обработка уровня сложности
+		# difficulty level processing
 
 	def npc_move:
-		движение моба к игроку
+		# mob movement towards the player
 
 	def play_music: 
-		запуск музыки во время боя
+		# trigger music during combat
 
 	def wins: 
-		вызывается когда игрок убил всех мобов (в ней вызывается меню победы и
-		победная музыка)
+		# called when the player killed all the mobs (it calls the victory menu and winning music)
 
 	def deads:
-		(вызывается при смерти игрока) в ней вызывается меню смерти и крик
+		# (called when the player dies) it calls the death menu and shout
 ```
-  
-### Персонажи:  
-  * Обима - большая черная обезьяна. ХП: 3, ближний бой.  
-  * Содат - рандомный чел с пушкой, мгновенно стреляет. ХП: 1, дальний бой.  
-  * Пинки - розовый черт, опаснее чем Обама ( по факту, Обама самый беспонтовый моб в игре, но да ладно). ХП: 5, ближний бой.  
-  * Стас - лютый чел, мини-версия Стаса Барецкого. Очень опасный враг. ХП: 10, ближний бой.  
-  * Сосадемон - Босс. Очень быстрый и убивает с одного удара. ХП: 30, ближний бой.  
-   
-   ### Пушки:  
-  * Дробовик - медленное, но мощное оружие, наносит 1,5 единицы урона.  
-  * Автомат - быстрое оружие, наносит 0.35 единиц урона.  
-  
-### Управление:  
-  * W,A,S,D - передвижение персонажа  
-  * 1, 2, колесико мыши - смена оружия  
-  * ЛКМ - стрельба  
-  
-+ Также в игре присутсвуют аптечки, который восстанавливают 35 ХП ( изначально у игрока 100 ХП )  
-  
-+ Игром может открыть дверь в следующую комнату, только в случае убийства всех мобов в данной комнате  
-  
-  
-За великолепное музыкальное сопровождение (согласитесь, тема в меню и во время самой игры просто шикарны)   
-благодарим нашего хорошего товарища, друга, начинающего свой путь краснокамского музыканта Артема Катаева  
-Ссылки на его контакты:  
-VK id: https://vk.com/akatae4va2  
-Группа с его работами: https://vk.com/public196675621
+
+
+
