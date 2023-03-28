@@ -3,7 +3,7 @@
 
 Inspired by the cult game DOOM, it was decided to write my own game like DOOM, only in python using the pygame library.
 
-## Description
+# Description
 The game has 3 levels, your task is to go through each and kill the main boss at the end. You initially have 100 health units and 2 weapons to choose from, moving through the levels you can find first-aid kits that restore your health. Remember, the next level will not open until you kill all the opponents on the current one.
 
 ## How to play?
